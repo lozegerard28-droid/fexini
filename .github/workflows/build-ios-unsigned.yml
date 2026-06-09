@@ -16,18 +16,30 @@ jobs:
           node-version: 22
 
       - run: npm install
-      - run: npx expo prebuild --platform ios --clean
+      - name: Expo prebuild + Generate bundle
+        run: |
+          rm -rf ios android
+          npx expo prebuild --platform ios --clean
+          cd ios
+          npx react-native bundle \
+            --platform ios \
+            --dev false \
+            --entry-file ../index.js \
+            --bundle-output Flexini/main.jsbundle \
+            --assets-dest Flexini/assets
 
       - name: Build unsigned IPA
         run: |
           cd ios
-          xcodebuild archive \
+          SKIP_BUNDLING=1 xcodebuild archive \
             -workspace Flexini.xcworkspace \
             -scheme Flexini \
             -sdk iphoneos \
             -configuration Release \
             -archivePath /tmp/Flexini.xcarchive \
-            CODE_SIGNING_ALLOWED=NO
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO
           mkdir -p /tmp/Payload
           cp -r "/tmp/Flexini.xcarchive/Products/Applications/Flexini.app" /tmp/Payload/
           cd /tmp
