@@ -16,22 +16,12 @@ jobs:
           node-version: 22
 
       - run: npm install
-      - name: Expo prebuild + Generate bundle
-        run: |
-          rm -rf ios android
-          npx expo prebuild --platform ios --clean
-          cd ios
-          npx react-native bundle \
-            --platform ios \
-            --dev false \
-            --entry-file ../index.js \
-            --bundle-output Flexini/main.jsbundle \
-            --assets-dest Flexini/assets
+      - run: npx expo prebuild --platform ios --clean
 
       - name: Build unsigned IPA
         run: |
           cd ios
-          SKIP_BUNDLING=1 xcodebuild archive \
+          xcodebuild archive \
             -workspace Flexini.xcworkspace \
             -scheme Flexini \
             -sdk iphoneos \
