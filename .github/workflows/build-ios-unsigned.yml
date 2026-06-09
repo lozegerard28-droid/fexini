@@ -1,0 +1,39 @@
+name: Build iOS (unsigned IPA)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+      - run: npx expo prebuild --platform ios --clean
+
+      - name: Build unsigned IPA
+        run: |
+          cd ios
+          xcodebuild archive \
+            -workspace Flexini.xcworkspace \
+            -scheme Flexini \
+            -sdk iphoneos \
+            -configuration Release \
+            -archivePath $RUNNER_TEMP/Flexini.xcarchive \
+            CODE_SIGNING_ALLOWED=NO
+          mkdir -p $RUNNER_TEMP/Payload
+          cp -r "$RUNNER_TEMP/Flexini.xcarchive/Products/Applications/Flexini.app" "$RUNNER_TEMP/Payload/"
+          cd $RUNNER_TEMP
+          zip -r $RUNNER_TEMP/Flexini.ipa Payload/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Flexini-unsigned
+          path: ${{ runner.temp }}/Flexini.ipa

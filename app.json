@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "Flexini",
+    "slug": "Flexini",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.flexini.app",
+      "infoPlist": {
+        "UIFileSharingEnabled": true,
+        "LSSupportsOpeningDocumentsInPlace": true,
+        "NSPhotoLibraryAddUsageDescription": "Permet de sauvegarder les films",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.flexini.app",
+      "permissions": [
+        "INTERNET",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-file-system",
+        {
+          "filePermission": "Accès fichiers pour téléchargement"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "1fca0ea9-8f10-4939-9e5f-32e181b373ca"
+      }
+    },
+    "owner": "moooorice"
+  }
+}
