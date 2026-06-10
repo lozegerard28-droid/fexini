@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity, TextInput, Image } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity, TextInput, SafeAreaView } from 'react-native';
 import * as F from '../services/FexiniService';
 import { getMainDomain, setMainDomain, getDiscoveryUrl } from '../utils/storage';
 
@@ -34,15 +34,15 @@ export default function Home({ onNavigate }) {
   }, [url]);
 
   if (loading) return (
-    <View style={s.c}><View style={s.ctr}><ActivityIndicator size="large" color="#e94560" /><Text style={{ color: '#8892b0', marginTop: 16 }}>Connexion...</Text></View></View>
+    <SafeAreaView style={s.c}><View style={s.ctr}><ActivityIndicator size="large" color="#e94560" /><Text style={{ color: '#8892b0', marginTop: 16 }}>Connexion...</Text></View></SafeAreaView>
   );
 
   if (error) return (
-    <View style={s.c}><View style={s.ctr}><Text style={{ color: '#e94560', fontSize: 14 }}>{error}</Text></View></View>
+    <SafeAreaView style={s.c}><View style={s.ctr}><Text style={{ color: '#e94560', fontSize: 14 }}>{error}</Text></View></SafeAreaView>
   );
 
   return (
-    <View style={s.c}>
+    <SafeAreaView style={s.c}>
       <View style={s.h}>
         <Text style={s.ht}>FLEXINI</Text>
         {url ? <Text style={s.on}>{url.replace('https://', '')}</Text> : <Text style={s.off}>Indisponible</Text>}
@@ -51,7 +51,7 @@ export default function Home({ onNavigate }) {
       <View style={s.sr}>
         <TextInput style={s.si} placeholder="Rechercher..." placeholderTextColor="#8892b0" value={q}
           onChangeText={setQ} returnKeyType="search" onSubmitEditing={() => doSearch(q)} />
-        <TouchableOpacity style={s.sbtn} onPress={() => doSearch(q)}><Text style={{ color: '#fff' }}>OK</Text></TouchableOpacity>
+        <TouchableOpacity style={s.sbtn} onPress={() => doSearch(q)}><Text style={{ color: '#fff', fontSize: 16 }}>OK</Text></TouchableOpacity>
       </View>
 
       <View style={s.cr}>
@@ -63,6 +63,7 @@ export default function Home({ onNavigate }) {
       </View>
 
       <FlatList
+        style={s.fl}
         data={sr || items}
         keyExtractor={i => i.slug}
         renderItem={({ item }) => (
@@ -73,24 +74,25 @@ export default function Home({ onNavigate }) {
         )}
         ListEmptyComponent={<View style={s.ctr}><Text style={{ color: '#8892b0' }}>Aucun contenu</Text></View>}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const s = StyleSheet.create({
   c: { flex: 1, backgroundColor: '#0a0a1a' },
   ctr: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  fl: { flex: 1 },
   h: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#1a1a2e' },
   ht: { color: '#e94560', fontSize: 22, fontWeight: 'bold', letterSpacing: 2 },
   on: { color: '#4ade80', fontSize: 10 },
   off: { color: '#e94560', fontSize: 10 },
   sr: { flexDirection: 'row', paddingHorizontal: 16, paddingVertical: 10, gap: 8 },
-  si: { flex: 1, backgroundColor: '#1a1a2e', borderRadius: 10, paddingHorizontal: 12, height: 40, color: '#fff' },
-  sbtn: { backgroundColor: '#e94560', borderRadius: 10, width: 40, height: 40, justifyContent: 'center', alignItems: 'center' },
+  si: { flex: 1, backgroundColor: '#1a1a2e', borderRadius: 10, paddingHorizontal: 12, height: 44, color: '#fff', fontSize: 15 },
+  sbtn: { backgroundColor: '#e94560', borderRadius: 10, width: 48, height: 44, justifyContent: 'center', alignItems: 'center' },
   cr: { flexDirection: 'row', paddingHorizontal: 16, gap: 10, marginBottom: 16 },
-  cb: { flex: 1, backgroundColor: '#1a1a2e', borderRadius: 10, paddingVertical: 12, alignItems: 'center' },
-  cl: { color: '#fff', fontSize: 13, fontWeight: '600' },
-  it: { padding: 14, borderBottomWidth: 1, borderBottomColor: '#1a1a2e' },
-  itT: { color: '#ccd6f6', fontSize: 14 },
-  itY: { color: '#8892b0', fontSize: 11, marginTop: 2 },
+  cb: { flex: 1, backgroundColor: '#1a1a2e', borderRadius: 10, paddingVertical: 14, alignItems: 'center' },
+  cl: { color: '#fff', fontSize: 14, fontWeight: '600' },
+  it: { padding: 16, borderBottomWidth: 1, borderBottomColor: '#1a1a2e' },
+  itT: { color: '#ccd6f6', fontSize: 15 },
+  itY: { color: '#8892b0', fontSize: 12, marginTop: 3 },
 });

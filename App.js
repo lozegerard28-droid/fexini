@@ -11,12 +11,21 @@ export default function App() {
 
   const go = (name, p) => { setScreen(name); setParams(p || {}); };
 
+  const backTo = (name, p) => {
+    const merged = { ...params, ...p };
+    go(name, merged);
+  };
+
+  const backFromDetail = () => {
+    go('category', { category: params.category, label: params.label, url: params.url });
+  };
+
   return (
     <View style={styles.root}>
       <StatusBar style="light" />
       {screen === 'home' && <Home onNavigate={go} />}
       {screen === 'category' && <Category {...params} onBack={() => go('home')} onNavigate={go} />}
-      {screen === 'detail' && <Detail {...params} onBack={() => go('category', { category: params.category, label: params.label, url: params.url })} />}
+      {screen === 'detail' && <Detail {...params} onBack={backFromDetail} />}
     </View>
   );
 }
