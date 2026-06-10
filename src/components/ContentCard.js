@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 const { width } = Dimensions.get('window');
 const CARD_W = (width - 48) / 2;
 
@@ -11,7 +10,7 @@ export default function ContentCard({ item, onPress }) {
         <Image source={{ uri: item.poster }} style={s.poster} resizeMode="cover" />
       ) : (
         <View style={[s.poster, s.ph]}>
-          <Ionicons name="film-outline" size={32} color="#4a5568" />
+          <Text style={{ color: '#4a5568', fontSize: 11 }}>No poster</Text>
           {item.year ? <Text style={s.phY}>{item.year}</Text> : null}
         </View>
       )}
