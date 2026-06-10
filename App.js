@@ -1,11 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './src/screens/HomeScreen';
-
-const Stack = createNativeStackNavigator();
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -40,12 +35,7 @@ const styles = StyleSheet.create({
 export default function App() {
   return (
     <ErrorBoundary>
-      <NavigationContainer>
-        <StatusBar style="light" />
-        <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#0a0a1a' }, animation: 'slide_from_right' }}>
-          <Stack.Screen name="Home" component={Home} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Home />
     </ErrorBoundary>
   );
 }
