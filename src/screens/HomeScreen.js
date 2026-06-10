@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity, TextInput, Image } from 'react-native';
 import * as F from '../services/FexiniService';
 import { getMainDomain, setMainDomain, getDiscoveryUrl } from '../utils/storage';
@@ -9,12 +9,13 @@ const CATS = [
   { key: 'animes', label: 'Animés' },
 ];
 
-export default function Home({ navigation }) {
+export default function Home({ onNavigate }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState('');
   const [url, setUrl] = useState(null);
   const [sr, setSr] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -22,7 +23,7 @@ export default function Home({ navigation }) {
         const saved = await getMainDomain();
         if (saved) { setUrl(saved); setItems(await F.fetchHomepage(saved)); }
         else { const disc = await getDiscoveryUrl(); const d = await F.discoverMainDomain(disc); await setMainDomain(d); setUrl(d); setItems(await F.fetchHomepage(d)); }
-      } catch {}
+      } catch (e) { setError(e.message); }
       setLoading(false);
     })();
   }, []);
@@ -33,7 +34,11 @@ export default function Home({ navigation }) {
   }, [url]);
 
   if (loading) return (
-    <View style={s.c}><View style={s.ctr}><Image source={require('../../assets/icon.png')} style={s.logo} /><ActivityIndicator size="large" color="#e94560" /><Text style={s.lt}>Connexion...</Text></View></View>
+    <View style={s.c}><View style={s.ctr}><ActivityIndicator size="large" color="#e94560" /><Text style={{ color: '#8892b0', marginTop: 16 }}>Connexion...</Text></View></View>
+  );
+
+  if (error) return (
+    <View style={s.c}><View style={s.ctr}><Text style={{ color: '#e94560', fontSize: 14 }}>{error}</Text></View></View>
   );
 
   return (
@@ -41,7 +46,6 @@ export default function Home({ navigation }) {
       <View style={s.h}>
         <Text style={s.ht}>FLEXINI</Text>
         {url ? <Text style={s.on}>{url.replace('https://', '')}</Text> : <Text style={s.off}>Indisponible</Text>}
-        <TouchableOpacity onPress={() => navigation.navigate('Settings')}><Text style={{ color: '#fff', fontSize: 20 }}>⚙</Text></TouchableOpacity>
       </View>
 
       <View style={s.sr}>
@@ -52,7 +56,7 @@ export default function Home({ navigation }) {
 
       <View style={s.cr}>
         {CATS.map(c => (
-          <TouchableOpacity key={c.key} style={s.cb} onPress={() => navigation.navigate('Category', { category: c.key, label: c.label, url })}>
+          <TouchableOpacity key={c.key} style={s.cb} onPress={() => onNavigate('category', { category: c.key, label: c.label, url })}>
             <Text style={s.cl}>{c.label}</Text>
           </TouchableOpacity>
         ))}
@@ -62,7 +66,7 @@ export default function Home({ navigation }) {
         data={sr || items}
         keyExtractor={i => i.slug}
         renderItem={({ item }) => (
-          <TouchableOpacity style={s.it} onPress={() => navigation.navigate('Detail', { slug: item.slug, url })}>
+          <TouchableOpacity style={s.it} onPress={() => onNavigate('detail', { slug: item.slug, url, category: 'home', label: 'Accueil' })}>
             <Text style={s.itT}>{item.title}</Text>
             {item.year ? <Text style={s.itY}>{item.year}</Text> : null}
           </TouchableOpacity>
@@ -76,8 +80,6 @@ export default function Home({ navigation }) {
 const s = StyleSheet.create({
   c: { flex: 1, backgroundColor: '#0a0a1a' },
   ctr: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  logo: { width: 80, height: 80, marginBottom: 20, tintColor: '#e94560' },
-  lt: { color: '#8892b0', marginTop: 16, fontSize: 14 },
   h: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#1a1a2e' },
   ht: { color: '#e94560', fontSize: 22, fontWeight: 'bold', letterSpacing: 2 },
   on: { color: '#4ade80', fontSize: 10 },
