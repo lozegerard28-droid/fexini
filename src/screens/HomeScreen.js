@@ -10,7 +10,7 @@ const CATS = [
   { key: 'animes', label: 'Animés' },
 ];
 
-export default function Home({ onNavigate }) {
+export default function Home({ onNavigate, onSettings }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState('');
@@ -47,6 +47,9 @@ export default function Home({ onNavigate }) {
       <View style={s.h}>
         <Text style={s.ht}>FLEXINI</Text>
         {url ? <Text style={s.on}>{url.replace('https://', '')}</Text> : <Text style={s.off}>Indisponible</Text>}
+        <TouchableOpacity onPress={() => onSettings && onSettings(url)} style={s.gear}>
+          <Text style={{ color: '#8892b0', fontSize: 20 }}>⚙</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={s.sr}>
@@ -85,6 +88,7 @@ const s = StyleSheet.create({
   ht: { color: '#e94560', fontSize: 22, fontWeight: 'bold', letterSpacing: 2 },
   on: { color: '#4ade80', fontSize: 10 },
   off: { color: '#e94560', fontSize: 10 },
+  gear: { paddingHorizontal: 8, paddingVertical: 4 },
   sr: { flexDirection: 'row', paddingHorizontal: 16, paddingVertical: 10, gap: 8 },
   si: { flex: 1, backgroundColor: '#1a1a2e', borderRadius: 10, paddingHorizontal: 12, height: 44, color: '#fff', fontSize: 15 },
   sbtn: { backgroundColor: '#e94560', borderRadius: 10, width: 48, height: 44, justifyContent: 'center', alignItems: 'center' },
