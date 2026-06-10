@@ -4,17 +4,13 @@ import { StatusBar } from 'expo-status-bar';
 import Home from './src/screens/HomeScreen';
 import Category from './src/screens/CategoryScreen';
 import Detail from './src/screens/DetailScreen';
+import Watch from './src/screens/WatchScreen';
 
 export default function App() {
   const [screen, setScreen] = useState('home');
   const [params, setParams] = useState({});
 
   const go = (name, p) => { setScreen(name); setParams(p || {}); };
-
-  const backTo = (name, p) => {
-    const merged = { ...params, ...p };
-    go(name, merged);
-  };
 
   const backFromDetail = () => {
     go('category', { category: params.category, label: params.label, url: params.url });
@@ -25,7 +21,8 @@ export default function App() {
       <StatusBar style="light" />
       {screen === 'home' && <Home onNavigate={go} />}
       {screen === 'category' && <Category {...params} onBack={() => go('home')} onNavigate={go} />}
-      {screen === 'detail' && <Detail {...params} onBack={backFromDetail} />}
+      {screen === 'detail' && <Detail {...params} onBack={backFromDetail} onNavigate={go} />}
+      {screen === 'watch' && <Watch {...params} onBack={() => go('detail', { slug: params.slug, url: params.url, category: params.category, label: params.label })} />}
     </View>
   );
 }

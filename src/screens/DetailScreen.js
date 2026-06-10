@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, ScrollView, ActivityIndicator, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Linking } from 'react-native';
+import { View, Text, Image, ScrollView, ActivityIndicator, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions } from 'react-native';
 import * as F from '../services/FexiniService';
 
 const { width } = Dimensions.get('window');
 
-export default function Detail({ slug, url, category, label, onBack }) {
+export default function Detail({ slug, url, category, label, onBack, onNavigate }) {
   const [d, setD] = useState(null);
   const [ld, setLd] = useState(true);
   const [playing, setPlaying] = useState(false);
@@ -22,10 +22,10 @@ export default function Detail({ slug, url, category, label, onBack }) {
     setPlaying(true);
     try {
       const watch = await F.fetchWatchPage(url, slug);
-      const src = watch.sources[0];
-      if (src) {
+      if (watch.sources.length > 0) {
+        const src = watch.sources[0];
         const targetUrl = src.url.startsWith('http') ? src.url : url + src.url;
-        await Linking.openURL(targetUrl);
+        onNavigate('watch', { watchUrl: targetUrl, slug, url, category, label });
       }
     } catch {}
     setPlaying(false);
