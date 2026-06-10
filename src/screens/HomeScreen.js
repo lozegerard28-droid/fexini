@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity, TextInput, SafeAreaView } from 'react-native';
 import * as F from '../services/FexiniService';
 import { getMainDomain, setMainDomain, getDiscoveryUrl } from '../utils/storage';
+import ContentCard from '../components/ContentCard';
 
 const CATS = [
   { key: 'films', label: 'Films' },
@@ -63,14 +64,13 @@ export default function Home({ onNavigate }) {
       </View>
 
       <FlatList
-        style={s.fl}
         data={sr || items}
         keyExtractor={i => i.slug}
+        numColumns={2}
+        columnWrapperStyle={s.rw}
+        contentContainerStyle={s.lst}
         renderItem={({ item }) => (
-          <TouchableOpacity style={s.it} onPress={() => onNavigate('detail', { slug: item.slug, url, category: 'home', label: 'Accueil' })}>
-            <Text style={s.itT}>{item.title}</Text>
-            {item.year ? <Text style={s.itY}>{item.year}</Text> : null}
-          </TouchableOpacity>
+          <ContentCard item={item} onPress={() => onNavigate('detail', { slug: item.slug, url, category: 'home', label: 'Accueil' })} />
         )}
         ListEmptyComponent={<View style={s.ctr}><Text style={{ color: '#8892b0' }}>Aucun contenu</Text></View>}
       />
@@ -81,7 +81,6 @@ export default function Home({ onNavigate }) {
 const s = StyleSheet.create({
   c: { flex: 1, backgroundColor: '#0a0a1a' },
   ctr: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  fl: { flex: 1 },
   h: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#1a1a2e' },
   ht: { color: '#e94560', fontSize: 22, fontWeight: 'bold', letterSpacing: 2 },
   on: { color: '#4ade80', fontSize: 10 },
@@ -92,7 +91,6 @@ const s = StyleSheet.create({
   cr: { flexDirection: 'row', paddingHorizontal: 16, gap: 10, marginBottom: 16 },
   cb: { flex: 1, backgroundColor: '#1a1a2e', borderRadius: 10, paddingVertical: 14, alignItems: 'center' },
   cl: { color: '#fff', fontSize: 14, fontWeight: '600' },
-  it: { padding: 16, borderBottomWidth: 1, borderBottomColor: '#1a1a2e' },
-  itT: { color: '#ccd6f6', fontSize: 15 },
-  itY: { color: '#8892b0', fontSize: 12, marginTop: 3 },
+  lst: { padding: 12, paddingBottom: 20 },
+  rw: { justifyContent: 'space-between' },
 });

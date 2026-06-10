@@ -25,7 +25,7 @@ export default function Detail({ slug, url, category, label, onBack, onNavigate 
       if (watch.sources.length > 0) {
         const src = watch.sources[0];
         const targetUrl = src.url.startsWith('http') ? src.url : url + src.url;
-        onNavigate('watch', { watchUrl: targetUrl, slug, url, category, label });
+        onNavigate('watch', { watchUrl: targetUrl, slug, url, category, label, title: d.title });
       }
     } catch {}
     setPlaying(false);
@@ -58,7 +58,7 @@ export default function Detail({ slug, url, category, label, onBack, onNavigate 
           <Image source={{ uri: d.poster }} style={s.p} resizeMode="cover" />
         ) : (
           <View style={[s.p, { justifyContent: 'center', alignItems: 'center' }]}>
-            <Text style={{ color: '#8892b0', fontSize: 14 }}>Pas d'affiche</Text>
+            <Text style={{ color: '#4a5568', fontSize: 14 }}>Pas d'affiche</Text>
           </View>
         )}
         <View style={s.i}>
