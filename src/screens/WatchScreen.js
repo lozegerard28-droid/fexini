@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native';
 import { WebView } from 'react-native-webview';
+import { addToHistory } from '../utils/storage';
 
-export default function Watch({ watchUrl, onBack }) {
+export default function Watch({ watchUrl, slug, title, poster, type, year, onBack }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [added, setAdded] = useState(false);
 
   return (
     <SafeAreaView style={s.c}>
@@ -31,7 +33,13 @@ export default function Watch({ watchUrl, onBack }) {
               domStorageEnabled={true}
               allowsInlineMediaPlayback={true}
               mediaPlaybackRequiresUserAction={false}
-              onLoad={() => setLoading(false)}
+              onLoad={() => {
+                setLoading(false);
+                if (!added && slug) {
+                  setAdded(true);
+                  addToHistory({ slug, title, poster, type, year });
+                }
+              }}
               onError={() => { setLoading(false); setError('Erreur de chargement'); }}
             />
           </>

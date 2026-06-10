@@ -25,7 +25,7 @@ export default function Detail({ slug, url, category, label, onBack, onNavigate 
       if (watch.sources.length > 0) {
         const src = watch.sources[0];
         const targetUrl = src.url.startsWith('http') ? src.url : url + src.url;
-        onNavigate('watch', { watchUrl: targetUrl, slug, url, category, label, title: d.title });
+        onNavigate('watch', { watchUrl: targetUrl, slug, url, category, label, title: d.title, poster: d.poster, type: d.type, year: d.year });
       }
     } catch {}
     setPlaying(false);
